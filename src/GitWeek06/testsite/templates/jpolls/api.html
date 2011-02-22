@@ -1,0 +1,28 @@
+<h1>Instructions for using Poll's json API</h1>
+
+<p>Warning: this is not a carefully architected json interface. It is experimental and subject to change. 
+Please use at your own risk. Also, please check the error item first, as the other items may not be defined 
+when there's been an error. The error trapping is not yet fully implemented. You may get a 404 response instead
+of a json error for the errors not yet properly trapped.</p>
+
+<p>The following URLs will respond with json as indicated:</p>
+
+<ul>
+<li><strong>api/ </strong></br/><p>shows this help page</p></li>
+<li><strong>jpolls/ </strong><br/><p>returns a list of polls in this format (without linebreaks):</p></li>
+    <p>[{"pk": poll_id,<br/>  "model": "polls.poll", <br/>  "fields": {"pub_date": "YYY:MM:DD hh:mm:ss", "question": "the poll question"}}, ...]<br/></p>
+<li><strong>jpolls/2/</strong><p>returns the following detail for poll number 2, if it exists:<br/>
+    { "pk":poll_id, 
+ <br/>"question":"The poll question", 
+ <br/>"publicationDate":"Mmm. dd, YYYY, h:mm a/p.m.", 
+ <br/>"error":"error message, if any", 
+ <br/>"choices":{ "choice_id1":"choiceText1", "choice_id2":"choiceText2",... }, } </p></li>
+<li><strong>jpolls/2/vote/3</strong><p>vote for choice_id=3 in poll_id=2; the results are returned (see next entry) </p></li>
+<li><strong>jpolls/2/results</strong><p>returns the results for poll number 2 in the following format:
+ <br/>{ "pk":poll_id, 
+ <br/>  "question":"The poll question", 
+ <br/>  "publicationDate":"Mmm. dd, YYYY, h:mm a/p.m.", 
+ <br/>  "error":"error message, if any", 
+ <br/>  "choices":{ "choice_id1":("choiceText1", votesForChoiceID1), "choice_id2":("choiceText2", votesForChoiceID2),... }, 
+ <br/>} </p></li>
+</ul>

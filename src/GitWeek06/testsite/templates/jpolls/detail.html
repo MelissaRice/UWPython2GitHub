@@ -1,0 +1,11 @@
+{ "pk":{{ poll.id }},
+  "question":"{{ poll.question }}",
+  "publicationDate":"{{ poll.pub_date }}",
+  "error":"{% if error_message %}{{ error_message }}{% endif %}",
+  "choices":{
+    {% csrf_token %}
+    {% for choice in poll.choice_set.all %}
+      "{{ choice.id }}":"{{ choice.choice }}",
+    {% endfor %}
+    },
+}

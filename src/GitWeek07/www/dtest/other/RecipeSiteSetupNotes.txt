@@ -1,0 +1,899 @@
+Django Recipe Website Setup Notes (week7 assignment)
+====================================================
+
+===============================================================================
+1. Set up the database in postgres:
+==================================
+
+   Run pgAdmin III. 
+   Expand postgresServer1 entry, expand databases, right click on databases, select new database
+   Set...
+     Name: djangoRecipeDB
+     Encoding: UTF-8
+     Tablespace: default
+     Connection Limit: -1
+
+===============================================================================
+2. Set up the django recipe project starter files for recipesite:
+================================================================
+
+   Make a DOS window with run as administrator.
+   cd C:\A\eclipse\projects\InternetProgrammingLabs\src\Week07\
+   C:\A\apps\Python\32bit\v27\python.exe C:\A\apps\Python\32bit\v27\Lib\site-packages\django\bin\django-admin.py startproject recipesite
+   cd recipesite
+   mklink python.exe  C:\A\apps\Python\32bit\v27\python.exe
+
+===============================================================================
+3. Run the Django Server:
+========================
+
+   python.exe manage.py runserver 8085 for localhost access only or
+   python.exe manage.py runserver 0.0.0.0:8085 for universal access
+
+output:
+-----------------------------------------------------------   
+C:\A\eclipse\projects\InternetProgrammingLabs\src\Week07\recipesite>python.exe m
+anage.py runserver 8085
+Validating models...
+0 errors found
+
+Django version 1.2.5, using settings 'recipesite.settings'
+Development server is running at http://127.0.0.1:8085/
+Quit the server with CTRL-BREAK.
+Validating models...
+0 errors found
+-----------------------------------------------------------
+   
+===============================================================================
+4. Configure django settings file for testsite:	
+==============================================
+
+   In C:\A\eclipse\projects\InternetProgrammingLabs\src\Week07\djtutor\recipesite\settings.py 
+   Change these settings:
+
+# Django settings for recipesite project.
+
+DEBUG = True
+TEMPLATE_DEBUG = DEBUG
+ADMINS = (
+    ('Melissa','melissafmtek@gmail.com'),
+)   
+MANAGERS = ADMINS
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'djangoRecipeDB',
+        'USER': 'postgres',
+        'PASSWORD': '',
+        'HOST': 'localhost', 
+        'PORT': '5432',
+    }
+}
+TIME_ZONE = 'America/Vancouver'
+LANGUAGE_CODE = 'en-us'
+SITE_ID = 1
+USE_I18N = True
+USE_L10N = True
+MEDIA_ROOT = ''
+MEDIA_URL = ''
+ADMIN_MEDIA_PREFIX = '/media/'
+SECRET_KEY = '&&%ct--va80v7p+c44uh2h+hvnr=0#_^0i2zb6j2x_i#6c=t0b'
+TEMPLATE_LOADERS = (
+    'django.template.loaders.filesystem.Loader',
+    'django.template.loaders.app_directories.Loader',
+)
+MIDDLEWARE_CLASSES = (
+    'django.middleware.common.CommonMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+)
+ROOT_URLCONF = 'recipesite.urls'
+TEMPLATE_DIRS = (
+    'C:/A/eclipse/projects/InternetProgrammingLabs/src/Week07/recipesite/templates/'
+)
+INSTALLED_APPS = (
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.sites',
+    'django.contrib.messages',
+    'django.contrib.admin',
+    'django.contrib.admindocs',
+    'recipes',
+    #'menus',
+)
+
+
+===============================================================================
+5. Create tables in the database for the default-installed django applications:
+==============================================================================
+
+   Make sure the dev server is running. 
+   cd C:\A\eclipse\projects\InternetProgrammingLabs\src\Week07\recipesite\
+   python manage.py syncdb
+
+output:   
+-----------------------------------------------------------
+C:\A\eclipse\projects\InternetProgrammingLabs\src\Week07\recipesite>python manag
+e.py syncdb
+Creating table auth_permission
+Creating table auth_group_permissions
+Creating table auth_group
+Creating table auth_user_user_permissions
+Creating table auth_user_groups
+Creating table auth_user
+Creating table auth_message
+Creating table django_content_type
+Creating table django_session
+Creating table django_site
+Creating table django_admin_log
+
+You just installed Django's auth system, which means you don't have any superuse
+rs defined.
+Would you like to create one now? (yes/no): yes
+Username (Leave blank to use 'mlr'):
+E-mail address: melissafmtek@gmail.com
+Password:
+Password (again):
+Superuser created successfully.
+Installing index for auth.Permission model
+Installing index for auth.Group_permissions model
+Installing index for auth.User_user_permissions model
+Installing index for auth.User_groups model
+Installing index for auth.Message model
+Installing index for admin.LogEntry model
+No fixtures found.
+-----------------------------------------------------------
+
+Running the \dt command in: C:\A\apps\PostgresQL\bin>psql.exe -E djangoTestDB postgres
+shows the tables created:
+
+output:
+-----------------------------------------------------------
+C:\A\apps\PostgresQL\bin>psql.exe -E djangoRecipeDB postgres
+
+psql (9.0.1)
+WARNING: Console code page (437) differs from Windows code page (1252)
+         8-bit characters might not work correctly. See psql reference
+         page "Notes for Windows users" for details.
+Type "help" for help.
+
+djangoRecipeDB=# \dt
+********* QUERY **********
+SELECT n.nspname as "Schema",
+  c.relname as "Name",
+  CASE c.relkind WHEN 'r' THEN 'table' WHEN 'v' THEN 'view' WHEN 'i' THEN 'index
+' WHEN 'S' THEN 'sequence' WHEN 's' THEN 'special' END as "Type",
+  pg_catalog.pg_get_userbyid(c.relowner) as "Owner"
+FROM pg_catalog.pg_class c
+     LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+WHERE c.relkind IN ('r','')
+      AND n.nspname <> 'pg_catalog'
+      AND n.nspname <> 'information_schema'
+      AND n.nspname !~ '^pg_toast'
+  AND pg_catalog.pg_table_is_visible(c.oid)
+ORDER BY 1,2;
+**************************
+
+                   List of relations
+ Schema |            Name            | Type  |  Owner
+--------+----------------------------+-------+----------
+ public | auth_group                 | table | postgres
+ public | auth_group_permissions     | table | postgres
+ public | auth_message               | table | postgres
+ public | auth_permission            | table | postgres
+ public | auth_user                  | table | postgres
+ public | auth_user_groups           | table | postgres
+ public | auth_user_user_permissions | table | postgres
+ public | django_admin_log           | table | postgres
+ public | django_content_type        | table | postgres
+ public | django_session             | table | postgres
+ public | django_site                | table | postgres
+(11 rows)
+
+djangoRecipeDB=#
+-----------------------------------------------------------
+
+===============================================================================
+6. Preliminary site design:
+==========================
+
+
+Narrative description:
+  Phase 1:
+    Recipes will be stored in a database including this information:
+      - Primary key (recipe table)
+      - Title of recipe
+      - Source of recipe
+      - Number of servings
+      - Preparation time
+      - Total time for preparation
+      - Tag List (ManyToMany: see tag table)
+      - Ingredient list (Foreign Keys: see ingredient table)
+      - Instruction list (Foreign Keys: see instruction table)
+    Tags will be a database table with this information:
+      - Primary key (tag table)
+      - Tagname 
+    Ingredients will be a database table with this information:
+      - Primary key (ingredient table)
+      - Number
+      - Name
+      - Amount
+      - Units
+    Instructions will be a database table with this information:
+      - Primary key (instruction table)
+      - Instruction Number
+      - Instruction Summary
+      - Instruction Detail
+    Menus will be a database table with this information:
+      - Primary key (menu table)
+      - Menu item list
+    Menu items:
+      - Primary key (menu item)
+      - Menu item number
+      - Menu item name
+    Users can:
+      - See a list of all recipes
+      - Click on a recipe link to see the recipe detail page
+      - Filter the recipe list by particular ingredients or tags
+      - Search the recipes by ingredients or tags
+      - Download or print the recipe as text (later, as pdf)
+    Administrators can:
+      - Add recipes and associated fields
+      - Add menus and associated fields
+      - Add tags
+      - Import and export the data as json
+      
+Timetable (to finish most by Saturday end of day, all by Sunday):
+  Wed:   Basic recipe working with:
+          - title, source, number of servings, ingredients, instructions
+         Ingredients table working with:
+           - number, name, amount (initially as float), units (enum)
+         Instructions working with:
+           - number, summary, detail
+         Unit tests
+         See a list of all recipes
+         Click on a recipe in list to see recipe detail
+  Thurs:
+         Import and export recipes in json
+         Click on an ingredient in a recipe to see all recipes with that ingredient
+         Add ingredient filter and list to the recipe list page
+         Pretty-up the admin interface for recipes
+         Add tags and ability to search and filter by tags on the recipe list page
+         Add tag list to detail page as links 
+         Add ability to click on the tag to show all tagged items
+         Pretty-up the admin interface for tags
+  Fri:  
+         Add menus table
+         Add page with list of menus
+         Add ability to link from recipes in menu to recipe detail
+         Add filter and search to menu list page
+         Pretty-up the admin interface for menus
+    
+  Sat:
+         Add preparation time and total time as custom timedelta fields
+         Add custom field for mixed number ingredients
+         Add ability to output recipe to latex and compile to pdf
+         Add ability to print or download the pdf
+         Pretty up the html throughout the site
+  Sun:
+         Add a docs section describing the design of the site
+         Move the site to bluebox and MelissaRice.info
+
+===============================================================================
+7. Create a 'recipes' application:
+=================================
+ 
+   The application will live in:
+   C:/A/eclipse/projects/InternetProgrammingLabs/src/Week07/recipesite/recipes
+   In a command shell:
+   cd C:/A/eclipse/projects/InternetProgrammingLabs/src/Week07/recipesite/
+   C:/A/apps/Python/32bit/v27/python.exe manage.py startapp recipes
+   
+   This creates the following directory structure:
+   recipes/
+      __init__.py
+      models.py
+      tests.py
+      views.py
+
+===============================================================================
+8. Set up preliminary copy of recipesite/urls.py:
+================================================
+
+from django.conf.urls.defaults import *
+
+from django.contrib import admin
+admin.autodiscover()
+
+urlpatterns = patterns('',
+    # Recipes
+    (r'^recipes/',include('recipes.urls')),
+
+    # Admin docs
+    (r'^admin/doc/', include('django.contrib.admindocs.urls')),
+
+    # Admin:
+    (r'^admin/', include(admin.site.urls)),
+
+    # Default:
+    (r'^$', 'views.index')
+)
+
+handler404 = 'views.error404'
+
+
+===============================================================================
+9. Set up preliminary copy of recipesite/views.py:
+=================================================
+
+from django.template import RequestContext
+from django.http import HttpResponse, HttpResponseRedirect
+from django.core.urlresolvers import reverse
+from recipes.models import Instruction, Ingredient, Recipe
+from django.shortcuts import render_to_response, get_object_or_404
+
+def index(request):
+    return render_to_response('index.html')
+
+
+
+===============================================================================
+10. Set up preliminary copy of recipesite/recipes/models.py:
+===========================================================
+
+from django.db import models
+
+class Ingredient(models.Model):
+    UNIT_CHOICES = (
+        ('C', 'Cups'),
+        ('c', 'Cup'),
+        ('B', 'Tbs'),
+        ('S', 'tsp'),
+        ('L', 'lbs'),    
+        ('l', 'lb'),    
+        ('N', ' '),    
+    )
+    order   = models.PositiveSmallIntegerField()
+    name    = models.CharField(max_length=80)
+    amount  = models.FloatField()
+    units   = models.CharField(max_length=1, choices=UNIT_CHOICES)
+    recipe  = models.ForeignKey('Recipe')
+    def __unicode__(self):
+            return self.name    
+
+class Instruction(models.Model):
+    order    = models.PositiveSmallIntegerField()
+    summary  = models.CharField(max_length=25)
+    detail   = models.CharField(max_length=500)
+    recipe   = models.ForeignKey('Recipe')
+    def __unicode__(self):
+            return self.summary
+
+class Recipe(models.Model):
+    title    = models.CharField(max_length=80)
+    source   = models.CharField(max_length=80)
+    servings = models.PositiveSmallIntegerField()
+    #prep_time = models.??timedelta??
+    #total_time = models.??timedelta??
+    def __unicode__(self):
+            return self.title    
+
+===============================================================================
+11. Set up preliminary copy of recipesite/recipes/urls.py:
+=========================================================
+
+from django.conf.urls.defaults import *
+
+from django.contrib import admin
+admin.autodiscover()
+
+urlpatterns = patterns('recipes.views',
+    (r'^$', 'index'),
+    (r'^(?P<recipe_id>\d+)/$', 'detail'),
+)
+
+===============================================================================
+12. Set up preliminary copy of recipesite/recipes/views.py:
+==========================================================
+
+from django.template import RequestContext
+from django.http import HttpResponse, HttpResponseRedirect
+from django.core.urlresolvers import reverse
+from recipes.models import Instruction, Ingredient, Recipe
+from django.shortcuts import render_to_response, get_object_or_404
+
+
+def index(request):
+    recipeList = Recipe.objects.all().order_by('title')[:5]
+    return render_to_response('recipes/index.html', {'recipeList':recipeList})
+
+def detail(request, recipe_id):
+    r = get_object_or_404(Recipe, pk=recipe_id)
+    return render_to_response('recipes/detail.html', {'recipe':r}, context_instance=RequestContext(request))
+
+
+===============================================================================
+13. Set up preliminary copy of recipesite/recipes/tests.py:
+==========================================================
+
+from django.test import TestCase
+from recipes.models import Instruction, Ingredient, Recipe
+
+
+class RecipeTest(TestCase):
+    
+    def setUp(self):
+        """
+        Set up for testing the recipe models.
+        """
+        # set up recipe 1
+        self.recipe = Recipe.objects.create(title='Mint Iced Tea',source='Big Book of Iced Tea Ideas',servings=8)
+        self.recipe.ingredient_set.create(order=5,amount=8,units='N',name='mint sprigs')
+        self.recipe.ingredient_set.create(order=3,amount=4,units='T',name='sugar (more to taste)')
+        self.recipe.ingredient_set.create(order=1,amount=8,units='N',name='tea bags')
+        self.recipe.ingredient_set.create(order=4,amount=3,units='C',name='crushed ice')
+        self.recipe.ingredient_set.create(order=2,amount=5,units='C',name='boiling water')
+        self.recipe.instruction_set.create(order=2,summary='Sweeten',detail='Add the sugar and sweeten to taste.')
+        self.recipe.instruction_set.create(order=4,summary='Garnish and Serve',detail='Pour the tea into tall glasses, garnish each with a mint sprig, and serve.')
+        self.recipe.instruction_set.create(order=3,summary='Cool',detail='Allow the tea to cool for 15 minutes, then add the ice.')
+        self.recipe.instruction_set.create(order=1,summary='Brew Tea',detail='Brew the tea bags in the boiling water for 3 minutes, then discard tea bags.')
+        
+    def testRecipe(self):
+        self.assertEqual(self.recipe.title,'Mint Iced Tea')    
+        self.assertEqual(self.recipe.source,'Big Book of Iced Tea Ideas')    
+        self.assertEqual(self.recipe.servings,8)    
+        self.assertEqual(self.recipe.ingredient_set.all().count(), 5)    
+        #self.assertEqual(self.recipe.ingredient??number1.name,'tea bags')    
+        self.assertEqual(self.recipe.instruction_set.all().count(), 4)
+        #self.assertEqual(self.recipe.instruction??number1.summary,'Brew Tea')
+
+
+===============================================================================
+14. Set up preliminary copy of recipesite/recipes/admin.py:
+==========================================================
+
+from recipes.models import Instruction, Ingredient, Recipe
+from django.contrib import admin
+
+class IngredientsInline(admin.TabularInline):
+    model = Ingredient
+    extra = 3
+
+class InstructionsInline(admin.TabularInline):
+    model = Instruction
+    extra = 3
+
+class RecipeAdmin(admin.ModelAdmin):
+    fieldsets = [
+        (None,               {'fields': ['title','source','servings'],}),
+        ]
+    inlines = [IngredientsInline,InstructionsInline]
+
+admin.site.register(Recipe, RecipeAdmin)
+
+===============================================================================
+15. Set up preliminary copy of recipesite/templates/index.html:
+==============================================================
+
+<p>Put something here on the home index page...</p>
+
+===============================================================================
+16. Set up preliminary copy of recipesite/templates/404.html:
+==============================================================
+
+<h1>Oh No! This page does not exist. Sorry!!</h1>
+
+===============================================================================
+17. Set up preliminary copy of recipesite/templates/500.html:
+==============================================================
+
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block breadcrumbs %}<div class="breadcrumbs"><a href="/">{% trans "Home" %}</a> &rsaquo; {% trans "Server error" %}</div>{% endblock %}
+
+{% block title %}{% trans 'Server error (500)' %}{% endblock %}
+
+{% block content %}
+<h1>{% trans 'Server Error <em>(500)</em>' %}</h1>
+<p>{% trans "Oy Vey! There's been an error. It's been reported to the site administrators via e-mail and should be fixed shortly. Thanks for your patience." %}</p>
+
+{% endblock %}
+
+===============================================================================
+18. Set up preliminary copy of recipesite/templates/recipes/index.html:
+======================================================================
+
+{% if recipeList %}
+    <ul>
+    {% for recipe in recipeList %}
+        <li><a href="/recipes/{{ recipe.id }}/">{{ recipe.title }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No recipes are available.</p>
+{% endif %}
+
+===============================================================================
+19. Set up preliminary copy of recipesite/templates/recipes/detail.html:
+=======================================================================
+
+<h1>{{ recipe.title }}</h1>
+<p> Serves: &nbsp {{ recipe.servings }}</p>
+<h4>Ingredients:</h4>
+<table border="0">
+{% for ingredient in recipe.ingredient_set.all|dictsort:"order" %}
+   <tr><td> &nbsp &nbsp {{ ingredient.amount }} &nbsp {{ ingredient.get_units_display }} &nbsp </td><td> {{ ingredient.name }}</td></tr>
+{% endfor %}
+</table>
+<h4>Instructions:</h4>
+<ol>
+{% for instruction in recipe.instruction_set.all|dictsort:"order" %}
+    <li><b>{{ instruction.summary }}</b> <br/> <p> {{ instruction.detail }}</p></li>
+{% endfor %}
+</ol>
+<p> Source: &nbsp {{ recipe.source }}</p>
+
+
+===============================================================================
+20. Set up the recipe database with syncdb:
+==========================================
+
+In a command shell:
+
+   Make sure the dev server is running. 
+   cd C:\A\eclipse\projects\InternetProgrammingLabs\src\Week07\recipesite\
+   python manage.py syncdb
+   python.exe manage.py sql recipes # just informational - to see db structure
+
+
+output:
+-----------------------------------------
+Microsoft Windows [Version 6.0.6002]
+Copyright (c) 2006 Microsoft Corporation.  All rights reserved.
+
+C:\Users\mlr>cd C:\A\eclipse\projects\InternetProgrammingLabs\src\Week07\recipes
+ite\
+
+C:\A\eclipse\projects\InternetProgrammingLabs\src\Week07\recipesite>python manag
+e.py syncdb
+Creating table recipes_ingredient
+Creating table recipes_instruction
+Creating table recipes_recipe
+Installing index for recipes.Ingredient model
+Installing index for recipes.Instruction model
+No fixtures found.
+
+C:\A\eclipse\projects\InternetProgrammingLabs\src\Week07\recipesite>python.exe manage.py sql recipes
+BEGIN;
+CREATE TABLE "recipes_ingredient" (
+    "id" serial NOT NULL PRIMARY KEY,
+    "order" smallint CHECK ("order" >= 0) NOT NULL,
+    "name" varchar(80) NOT NULL,
+    "amount" double precision NOT NULL,
+    "units" varchar(1) NOT NULL,
+    "recipe_id" integer NOT NULL
+)
+;
+CREATE TABLE "recipes_instruction" (
+    "id" serial NOT NULL PRIMARY KEY,
+    "order" smallint CHECK ("order" >= 0) NOT NULL,
+    "summary" varchar(25) NOT NULL,
+    "detail" varchar(500) NOT NULL,
+    "recipe_id" integer NOT NULL
+)
+;
+CREATE TABLE "recipes_recipe" (
+    "id" serial NOT NULL PRIMARY KEY,
+    "title" varchar(80) NOT NULL,
+    "source" varchar(80) NOT NULL,
+    "servings" smallint CHECK ("servings" >= 0) NOT NULL
+)
+;
+ALTER TABLE "recipes_ingredient" ADD CONSTRAINT "recipe_id_refs_id_5e1489a0" FOR
+EIGN KEY ("recipe_id") REFERENCES "recipes_recipe" ("id") DEFERRABLE INITIALLY D
+EFERRED;
+ALTER TABLE "recipes_instruction" ADD CONSTRAINT "recipe_id_refs_id_63bd4f0c" FO
+REIGN KEY ("recipe_id") REFERENCES "recipes_recipe" ("id") DEFERRABLE INITIALLY
+DEFERRED;
+COMMIT;
+
+C:\A\eclipse\projects\InternetProgrammingLabs\src\Week07\recipesite>
+-----------------------------------------
+
+
+===============================================================================
+21. Start the server:
+====================
+
+In a command shell:
+
+   cd C:\A\eclipse\projects\InternetProgrammingLabs\src\Week07\recipesite\
+   python manage.py runserver 8085
+
+===============================================================================
+22. Confirm pages are working:
+=============================
+
+http://localhost:8085/ 
+---------------------
+  > Currently displays temporary message. Fine for now.
+  > Later: put something more sensible there, like a site explanation with links to the recipes and menus.
+  
+http://localhost:8085/recipes/ 
+-----------------------------
+  > No recipes available initially (correctly displays message)
+  > After adding a recipe a list is correctly displayed.
+  
+http://localhost:8085/recipes/1/
+-----------------------------
+
+Basically works, with these issues:
+  1. Instructions are not in order
+  2. Instruction number and loop counter are both printing - only need the instruction number.
+  3. Not printing source or servings yet.
+  4. Ingredient units are printing the db code, not the human symbol
+
+
+http://localhost:8085/admin/recipes/recipe/add/
+-----------------------------------------------
+Was able to add a recipe, but there were two problems:
+  1. I can't choice nothing for the units in ingredients.
+  2. The recipe shows up in the admin recipe list as "Recipe object" and another entry just Recipe. Weird.
+  
+   
+
+===============================================================================
+23. Run test suite:
+==================
+
+
+C:\A\eclipse\projects\InternetProgrammingLabs\src\Week07\recipesite>python.exe manage.py test recipes
+Creating test database 'default'...
+Creating table auth_permission
+Creating table auth_group_permissions
+Creating table auth_group
+Creating table auth_user_user_permissions
+Creating table auth_user_groups
+Creating table auth_user
+Creating table auth_message
+Creating table django_content_type
+Creating table django_session
+Creating table django_site
+Creating table django_admin_log
+Creating table recipes_ingredient
+Creating table recipes_instruction
+Creating table recipes_recipe
+Installing index for auth.Permission model
+Installing index for auth.Group_permissions model
+Installing index for auth.User_user_permissions model
+Installing index for auth.User_groups model
+Installing index for auth.Message model
+Installing index for admin.LogEntry model
+Installing index for recipes.Ingredient model
+Installing index for recipes.Instruction model
+No fixtures found.
+.
+----------------------------------------------------------------------
+Ran 1 test in 0.103s
+
+OK
+Destroying test database 'default'...
+
+C:\A\eclipse\projects\InternetProgrammingLabs\src\Week07\recipesite>
+
+
+===============================================================================
+24. DB Migration with South:
+===========================
+
+1. Install south in your python distribution:
+
+I installed South as follows, in an administrator command shell:
+
+  cd C:\A\apps\Python\32bit\v27
+  python.exe Lib/site-packages/easy_install.py South
+  
+output
+-------------------------------------------------------------  
+Searching for South
+Reading http://pypi.python.org/simple/South/
+Reading http://south.aeracode.org/
+Reading http://south.aeracode.org/wiki/Download
+Best match: South 0.7.3
+Downloading http://pypi.python.org/packages/source/S/South/South-0.7.3.tar.gz#md
+5=32bd32fd98a912547976c2434703109e
+Processing South-0.7.3.tar.gz
+Running South-0.7.3\setup.py -q bdist_egg --dist-dir c:\users\mlr\appdata\local\
+temp\easy_install-wks1vm\South-0.7.3\egg-dist-tmp-vboobx
+zip_safe flag not set; analyzing archive contents...
+south.migration.base: module references __file__
+south.tests.__init__: module references __file__
+Adding south 0.7.3 to easy-install.pth file
+
+Installed c:\a\apps\python\32bit\v27\lib\site-packages\south-0.7.3-py2.7.egg
+Processing dependencies for South
+Finished processing dependencies for South
+-------------------------------------------------------------
+
+2. Set up django to use the south for the project.
+
+In the settings.py file in the root project directory, add south to the INSTALLED_APPS:
+
+INSTALLED_APPS = (
+    'django.contrib.admin',
+    ...
+    'south',
+)
+
+In a command shell:
+
+  cd C:\A\eclipse\projects\InternetProgrammingLabs\src\Week07\recipesite
+  python.exe manage.py syncdb
+  
+output
+------------------------------------------------------------------  
+Syncing...
+Creating table south_migrationhistory
+No fixtures found.
+
+Synced:
+ > django.contrib.auth
+ > django.contrib.contenttypes
+ > django.contrib.sessions
+ > django.contrib.sites
+ > django.contrib.messages
+ > django.contrib.admin
+ > django.contrib.admindocs
+ > south
+ > recipes
+
+Not synced (use migrations):
+ -
+(use ./manage.py migrate to migrate these)
+------------------------------------------------------------------
+
+3. Set up an existing django app to use south.
+
+Notes:
+  1. South does database migration on a per-application basis. 
+     It keeps a migration folder in the app directory.
+  2. Once you have set up a models.py file and run manage.py syncdb to sync the 
+     database to it, you cannot change the models file until you have set up
+     south so that it has an initial configuration to compare to.
+
+In a command shell we will convert the recipes app to use South:
+
+  cd C:\A\eclipse\projects\InternetProgrammingLabs\src\Week07\recipesite
+  python.exe manage.py convert_to_south recipes
+
+output
+---------------------------------------
+Creating migrations directory at 'C:\A\eclipse\projects\InternetProgrammingLabs\
+src\Week07\recipesite\recipes\migrations'...
+Creating __init__.py in 'C:\A\eclipse\projects\InternetProgrammingLabs\src\Week0
+7\recipesite\recipes\migrations'...
+ + Added model recipes.Ingredient
+ + Added model recipes.Instruction
+ + Added model recipes.Recipe
+Created 0001_initial.py. You can now apply this migration with: ./manage.py migr
+ate recipes
+ - Soft matched migration 0001 to 0001_initial.
+Running migrations for recipes:
+ - Migrating forwards to 0001_initial.
+ > recipes:0001_initial
+   (faked)
+
+App 'recipes' converted. Note that South assumed the application's models matche
+d the database
+(i.e. you haven't changed it since last syncdb); if you have, you should delete
+the recipes/migrations
+directory, revert models.py so it matches the database, and try again.
+---------------------------------------
+
+As you can see, this made a migrations directory in the recipes root directory
+and stored some data there about the database models for Recipe, Ingredient,
+and Instruction.
+
+4. Change the model and migrate with south.
+
+In recipes/models.py, add a remark field:
+
+remark  = models.CharField(max_length=80,blank=True)
+
+to Ingredients and save the models.py file:
+
+class Ingredient(models.Model):
+    UNIT_CHOICES = (
+        ('C', 'Cups'),
+        ('c', 'Cup'),
+        ('B', 'Tbs'),
+        ('S', 'tsp'),
+        ('L', 'lbs'),    
+        ('l', 'lb'), 
+        ('O', 'oz'),   
+        ('N', ' '),    
+    )
+    order   = models.PositiveSmallIntegerField()
+    amount  = models.FloatField()
+    units   = models.CharField(max_length=1, choices=UNIT_CHOICES)
+    name    = models.CharField(max_length=30)
+    remark  = models.CharField(max_length=80,blank=True) # new field!
+    recipe  = models.ForeignKey('Recipe')
+    def __unicode__(self):
+            return self.name    
+
+
+In a command shell we will migrate the database to include the new remark 
+field in Ingredient:
+
+  cd C:\A\eclipse\projects\InternetProgrammingLabs\src\Week07\recipesite
+  python.exe manage.py schemamigration recipes --auto
+
+output
+---------------------------------------
+ + Added field remark on recipes.Ingredient
+Created 0002_auto__add_field_ingredient_remark.py. 
+You can now apply this migration with: ./manage.py migrate recipes
+---------------------------------------
+
+   python.exe manage.py migrate recipes
+   
+output
+---------------------------------------
+Running migrations for recipes:
+ - Migrating forwards to 0002_auto__add_field_ingredient_remark.
+ > recipes:0002_auto__add_field_ingredient_remark
+ - Loading initial data for recipes.
+No fixtures found.
+   
+---------------------------------------
+
+
+
+5. Set up a new django app to use south.
+
+Example: setting up the recipes app to use south....
+
+
+C:\A\eclipse\projects\InternetProgrammingLabs\src\Week07\recipesite>python.exe m
+anage.py convert_to_south recipes
+===============================================================================
+XX. Fix Errors:
+==============
+
+http://localhost:8085/admin/recipes/recipe/add/
+-----------------------------------------------
+Was able to add a recipe, but there were two problems:
+  1. There is an entry just called Recipe. Weird.
+  2. The ingredient fields can be better ordered.
+
+The unit tests seem to work but I need more....
+
+===============================================================================
+===============================================================================
+===============================================================================
+===============================================================================
+===============================================================================
+===============================================================================
+===============================================================================
+===============================================================================
+===============================================================================
+===============================================================================
+===============================================================================
+===============================================================================
+
+===============
+other stuff....
+===============
+
+python manage.py validate -- Checks for any errors in the construction of your models.
+python manage.py sqlcustom recipes -- Outputs any custom SQL statements (such as table modifications or constraints) that are defined for the application.
+python manage.py sqlclear recipes -- Outputs the necessary DROP TABLE statements for this app, according to which tables already exist in your database (if any).
+python manage.py sqlindexes recipes -- Outputs the CREATE INDEX statements for this app.
+python manage.py sqlall recipes -- A combination of all the SQL from the sql, sqlcustom, and sqlindexes commands.
+
+

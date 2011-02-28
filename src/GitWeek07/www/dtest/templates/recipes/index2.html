@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml" lang="{{ LANGUAGE_CODE|default:"en-us" }}" xml:lang="{{ LANGUAGE_CODE|default:"en-us" }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}> 
+<head> 
+<title>Recipes</title> 
+<link rel="stylesheet" type="text/css" href="/static/css/base.css" />
+<link rel="stylesheet" type="text/css" href="/static/css/dashboard.css" />
+<!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="/static/css/ie.css" /><![endif]-->
+{% block blockbots %}<meta name="robots" content="NONE,NOARCHIVE" />{% endblock %}
+</head>
+
+<body class="dashboard"> 
+<!-- Container --> 
+<div id="container"> 
+  <!-- Header --> 
+  <div id="header"> 
+    <!-- Branding --> 
+    <div id="branding"> 
+      <h1 id="site-name">Recipe Central</h1> 
+    </div> 
+    <!-- END Branding --> 
+    <!-- User-tools -->      
+    <div id="user-tools"> 
+      <a href="/">Home</a> ... <a href="/recipes/tags/">Tag List</a> ... Recipes
+    </div> 
+    <!-- END User-tools -->      
+  </div> 
+  <!-- END Header --> 
+
+  <!-- Content colMS--> 
+  <div id="content" class="colMS"> 
+        
+
+<h1>Recipes</h1>
+
+<!-- content-main--> 
+<div id="content-main"> 
+
+{% if recipeList %}
+    <ul>
+    {% for recipe in recipeList %}
+        <li><a href="/recipes/{{ recipe.id }}/">{{ recipe.title }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No recipes are available.</p>
+{% endif %}
+
+</div> 
+<!-- END content-main--> 
+<!-- content-related--> 
+<div id="content-related"> 
+<!-- recent-actions-module--> 
+<div class="module" id="recent-actions-module"> 
+
+<h4>Tags:</h4><p>
+{% for tag in tagList %} 
+    <a href="/recipes/tags/{{ tag.name }}">{{ tag.name }}</a>  
+{% endfor %}
+</p>
+
+  </div>  
+<!-- END recent-actions-module--> 
+</div> 
+<!-- END content-related--> 
+ 
+  <br class="clear" /> 
+  </div>
+  <!-- END Content colMS--> 
+ 
+  <div id="footer"></div> 
+</div> 
+<!-- END Container --> 
+ 
+</body> 
+</html> 

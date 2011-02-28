@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="{{ LANGUAGE_CODE|default:"en-us" }}" 
+      xml:lang="{{ LANGUAGE_CODE|default:"en-us" }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
+<head>
+<title>Recipe Central</title>
+<link rel="stylesheet" type="text/css" href="/static/css/base.css" />
+<link rel="stylesheet" type="text/css" href="/static/css/dashboard.css" />
+<!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="/static/css/ie.css" /><![endif]-->
+{% block blockbots %}<meta name="robots" content="NONE,NOARCHIVE" />{% endblock%}
+</head>
+<body class="dashboard">
+<!-- Container -->
+<div id="container">
+  <!-- Header -->
+  <div id="header">
+    <!-- Branding -->
+    <div id="branding">
+      <h1 id="site-name">Recipe Central Demo Site</h1>
+    </div>
+    <!-- END Branding -->
+    <!-- User-tools -->
+    <div id="user-tools">
+      Home &nbsp &nbsp | &nbsp &nbsp   <a href="/recipes/">Recipe List</a> &nbsp &nbsp | &nbsp &nbsp   <a href="/admin/recipes/">Add Recipe (staff only)</a>
+    </div>
+    <!-- END User-tools -->
+  </div>
+  <!-- END Header -->
+
+  <!-- Content colMS-->
+  <div id="content" class="colMS">
+
+
+<h1>What's this?</h1>
+
+<p>Welcome to the Recipe Central Demonstration Site. You can view recipes and click on ingredients or tags 
+to find more recipes with those ingredients or tags. If you have a staff login you can add recipes. Not 
+everything is working yet, so please be patient... thanks! </p>
+
+<a href="/recipes/">See the recipes...</a>
+
+  <br class="clear" />
+  </div>
+  <!-- END Content colMS-->
+</div>
+<!-- END Container -->
+
+</body>
+</html>
+

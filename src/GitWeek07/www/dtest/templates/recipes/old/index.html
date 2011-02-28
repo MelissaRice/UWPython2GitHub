@@ -1,0 +1,9 @@
+{% if recipeList %}
+    <ul>
+    {% for recipe in recipeList %}
+        <li><a href="/recipes/{{ recipe.id }}/">{{ recipe.title }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No recipes are available.</p>
+{% endif %}

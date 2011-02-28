@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml" lang="{{ LANGUAGE_CODE|default:"en-us" }}" xml:lang="{{ LANGUAGE_CODE|default:"en-us" }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}> 
+<head> 
+<title>{{ recipe.title }}</title> 
+<link rel="stylesheet" type="text/css" href="/static/css/base.css" />
+<link rel="stylesheet" type="text/css" href="/static/css/dashboard.css" />
+<!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="/static/css/ie.css" /><![endif]-->
+{% block blockbots %}<meta name="robots" content="NONE,NOARCHIVE" />{% endblock %}
+</head>
+
+<body class="dashboard"> 
+<!-- Container --> 
+<div id="container"> 
+  <!-- Header --> 
+  <div id="header"> 
+    <!-- Branding --> 
+    <div id="branding"> 
+      <h1 id="site-name">Recipe Central</h1> 
+    </div> 
+    <!-- END Branding --> 
+    <!-- User-tools -->      
+    <div id="user-tools"> 
+      <a href="/">Home</a> ... <a href="/recipes/">Recipe List</a> ... {{ recipe.title }}
+    </div> 
+    <!-- END User-tools -->      
+  </div> 
+  <!-- END Header --> 
+
+  <!-- Content colMS--> 
+  <div id="content" class="colMS"> 
+        
+
+<h1>{{ recipe.title }}</h1>
+
+<!-- content-main--> 
+<div id="content-main"> 
+
+<p> Serves: &nbsp {{ recipe.servings }}</p>
+<h4>Ingredients:</h4>
+<table border="0">
+{% for ingredient in recipe.ingredient_set.all|dictsort:"order" %}
+   <tr><td> &nbsp &nbsp {{ ingredient.amount|floatformat }} &#x2009 {{ ingredient.get_units_display }} &nbsp </td><td> 
+   <a href="../ingredient/{{ ingredient.safeName }}">{{ ingredient.name }}</a>{{ ingredient.remark }} </td></tr>
+{% endfor %}
+</table>
+<h4>Instructions:</h4>
+<ol>
+{% for instruction in recipe.instruction_set.all|dictsort:"order" %}
+    <li><b>{{ instruction.summary }}</b> <br/> <p> {{ instruction.detail }}</p></li>
+{% endfor %}
+</ol>
+<p> Source: &nbsp {{ recipe.source }}</p>
+</div> 
+<!-- END content-main--> 
+<!-- content-related--> 
+<div id="content-related"> 
+<!-- recent-actions-module--> 
+<div class="module" id="recent-actions-module"> 
+
+<h4>Tags:</h4><p>
+{% for tag in recipe.tags.all %} 
+    <a href="../tags/{{ tag.name }}">{{ tag.name }}</a> &nbsp
+{% endfor %}
+</p>
+
+  </div>  
+<!-- END recent-actions-module--> 
+</div> 
+<!-- END content-related--> 
+ 
+  <br class="clear" /> 
+  </div>
+  <!-- END Content colMS--> 
+ 
+  <div id="footer"></div> 
+</div> 
+<!-- END Container --> 
+ 
+</body> 
+</html> 

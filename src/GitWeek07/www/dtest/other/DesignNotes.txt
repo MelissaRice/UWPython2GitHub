@@ -1,0 +1,202 @@
+Narrative description:
+  Phase 1:
+    Recipes will be stored in a database including this information:
+      - Primary key (recipe table)
+      - Title of recipe
+      - Source of recipe
+      - Number of servings
+      - Preparation time
+      - Total time for preparation
+      - Tag List (ManyToMany: see tag table)
+      - Ingredient list (Foreign Keys: see ingredient table)
+      - Instruction list (Foreign Keys: see instruction table)
+    Tags will be a database table with this information:
+      - Primary key (tag table)
+      - Tagname 
+    Ingredients will be a database table with this information:
+      - Primary key (ingredient table)
+      - Number
+      - Name
+      - Amount
+      - Units
+    Instructions will be a database table with this information:
+      - Primary key (instruction table)
+      - Instruction Number
+      - Instruction Summary
+      - Instruction Detail
+    Menus will be a database table with this information:
+      - Primary key (menu table)
+      - Menu item list
+    Menu items:
+      - Primary key (menu item)
+      - Menu item number
+      - Menu item name
+    Users can:
+      - See a list of all recipes
+      - Click on a recipe link to see the recipe detail page
+      - Filter the recipe list by particular ingredients or tags
+      - Search the recipes by ingredients or tags
+      - Download or print the recipe as text (later, as pdf)
+    Administrators can:
+      - Add recipes and associated fields
+      - Add menus and associated fields
+      - Add tags
+      - Import and export the data as json
+      
+Timetable (to finish most by Saturday end of day, all by Sunday):
+  Wed:   Basic recipe working with:
+          - title, source, number of servings, ingredients, instructions
+         Ingredients table working with:
+           - number, name, amount (initially as float), units (enum)
+         Instructions working with:
+           - number, summary, detail
+         Unit tests
+         See a list of all recipes
+         Click on a recipe in list to see recipe detail
+  Thurs:
+
+=======> Import and export recipes in json:
+            export: python.exe manage.py dumpdata recipes menus > backups/recipeData-2011-02-24.json
+            import: python.exe manage.py loaddata --database djangoRecipeDB backups/recipeData-2011-02-24.json
+
+=======> Add capability: Click on an ingredient in a recipe to see all recipes with that ingredient:
+           1. In the recipe detail page (/recipesite/templates/recipes/detail.html) each ingredient is now a link:
+              <h4>Ingredients:</h4>
+              <table border="0">
+              {% for ingredient in recipe.ingredient_set.all|dictsort:"order" %}
+                 <tr><td> &nbsp &nbsp {{ ingredient.amount|floatformat }} &#x2009 {{ ingredient.get_units_display }} &nbsp </td><td> 
+                 <a href="../ingredient/{{ ingredient.name }}">{{ ingredient.name }}</a> </td></tr>
+              {% endfor %}
+              </table>
+           2. The link (<a href="../ingredient/{{ ingredient.name }}">{{ ingredient.name }}</a>) 
+              points to the URL: /recipes/ingredient/ingredient.name/
+           3. In the recipes url.py (/recipesite/recipes/urls.py) this line traps the url for one-word all-alpha ingredients:
+                (r'ingredient/(?P<ingredient_name>\w+)/$', 'ingredient'),
+           4. This url resolver points to the ingredient view in /recipesite/recipes/views.py:
+              def ingredient(request, ingredient_name):
+    		      recipes = Recipe.objects.filter(ingredient__name__contains=ingredient_name)
+    		      return render_to_response('recipes/ingredient.html', {'recipes':recipes,'ingredientName':ingredient_name}, context_instance=RequestContext(request))
+           5. This view function sends the recipes list and ingredientName to the template /recipesite/templates/recipes/ingredient.html:
+              <h1>Recipes containing {{ ingredientName }}:</h1>
+              <ul>
+              {% for recipe in recipes %}
+                 <li><a href= "/recipes/{{ recipe.id }}/">{{ recipe.title }} </a> </li> 
+              {% endfor %}
+              </ul>                    
+           
+           
+           
+           
+
+
+=======> Add tags and ability to search and filter by tags on the recipe list page
+         1. In recipesite/recipes/models.py added a Tag class and for Recipe, a M2M tag relationship.
+         	class Tag(models.Model):
+    			name = models.CharField(max_length=25)
+    			def __unicode__(self):
+            		return self.name    
+			class Recipe(models.Model):
+			    ...
+			    tags     = models.ManyToManyField(Tag)
+         2. Migrate the db changes:
+              cd C:\A\eclipse\projects\InternetProgrammingLabs\src\Week07\recipesite
+  			  python.exe manage.py schemamigration recipes --auto
+		      python.exe manage.py migrate recipes
+         3. In recipesite/recipes/models.py make a TagAdmin, register it, and add tags to RecipeAdmin.
+            Don't use inlines for manytomany fields.   
+         
+			class TagAdmin(admin.ModelAdmin):
+			    fields = ['name']
+			
+			class RecipeAdmin(admin.ModelAdmin):
+			    fieldsets = [
+			        (None,               {'fields': ['title']}),
+			        (None,               {'fields': ['source','servings']}),
+			        (None,               {'fields': ['tags']}),
+			        ]
+			    inlines = [IngredientsInline,InstructionsInline]
+			    
+			admin.site.register(Recipe, RecipeAdmin)
+			admin.site.register(Tag, TagAdmin)
+			
+         
+=======> Add tag list to detail page as links: clicking on a tag makes a list of all tagged recipes
+         1. Added this to recipesite/templates/recipes/detail.html:
+         
+			<h4>Tags:</h4><p>
+			{% for tag in recipe.tags.all %} 
+			    <a href="../tags/{{ tag.name }}">{{ tag.name }}</a> &nbsp
+			{% endfor %}
+			</p>
+	         
+         2. This will refer to a url: /recipes/tags/tag.name so add this to /recipesite/recipes/urls.py:
+                (r'tags/(?P<tag_name>\w+)/$', 'tagged'),
+            
+         3. This will refer to /recipesite/recipes/views.py which needs a tagged function:
+
+			def tagged(request, tag_name):
+			    recipes = Recipe.objects.filter(tags__name__contains=tag_name)
+			    return render_to_response('recipes/tagged.html', {'recipes':recipes,'tagName':tag_name}, context_instance=RequestContext(request))
+         
+         4. This will refer to a tagged template to display the tagged recipes. 
+            See: /recipesite/templates/recipes/tagged.html
+            
+			<h1>Recipes tagged as {{ tagName }}:</h1>
+			<ul>
+			{% for recipe in recipes %}
+			   <li><a href= "/recipes/{{ recipe.id }}/">{{ recipe.title }} </a> </li> 
+			{% endfor %}
+			</ul>
+                              
+=======> Pretty up the html throughout the site
+
+         1. Set up for static pages (such as css or images). 
+            How to reference the css file or other static pages?
+            
+            Django does not serve static files in production, but the admin server 
+            will do so (insecurely and inefficiently) if you set it up. Normally
+            (in production) you let apache serve static pages.
+            
+            To set up the admin server for static pages:
+            
+            a. In recipesite/settings.py:
+            
+            MEDIA_ROOT = 'C:/A/eclipse/projects/InternetProgrammingLabs/src/Week07/recipesite/static/'
+            MEDIA_URL = '/static/'
+            
+            b. In recipesite/urls.py: 
+			   (r'^static/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
+			            
+            c. When requesting a static file, refer to it as living at '/static/css/file.css' or '/static/whatever/'
+                      
+
+
+=======> Add ingredient filter and list to the recipe list page
+
+=======> Pretty-up the admin interface for recipes
+=======> Pretty-up the admin interface for tags
+         
+
+  Fri:  
+=======> Add menus table
+=======> Add page with list of menus
+=======> Add ability to link from recipes in menu to recipe detail
+=======> Add filter and search to menu list page
+=======> Pretty-up the admin interface for menus
+    
+  Sat:
+=======> Add preparation time and total time as custom timedelta fields
+=======> Add custom field for mixed number ingredients
+=======> Add ability to output recipe to latex and compile to pdf
+=======> Add ability to print or download the pdf
+  Sun:
+=======> Add a docs section describing the design of the site
+=======> Move the site to bluebox and MelissaRice.info
+
+
+Things to fix:
+  1. Fix the ingredient and tag pivots so they work for when there are spaces in the name.
+  2. 
+  
+  
+  

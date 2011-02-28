@@ -1,0 +1,21 @@
+<h1>{{ recipe.title }}</h1>
+<p> Serves: &nbsp {{ recipe.servings }}</p>
+<h4>Ingredients:</h4>
+<table border="0">
+{% for ingredient in recipe.ingredient_set.all|dictsort:"order" %}
+   <tr><td> &nbsp &nbsp {{ ingredient.amount|floatformat }} &#x2009 {{ ingredient.get_units_display }} &nbsp </td><td> 
+   <a href="../ingredient/{{ ingredient.name }}">{{ ingredient.name }}</a> </td></tr>
+{% endfor %}
+</table>
+<h4>Instructions:</h4>
+<ol>
+{% for instruction in recipe.instruction_set.all|dictsort:"order" %}
+    <li><b>{{ instruction.summary }}</b> <br/> <p> {{ instruction.detail }}</p></li>
+{% endfor %}
+</ol>
+<h4>Tags:</h4><p>
+{% for tag in recipe.tags.all %} 
+    <a href="../tags/{{ tag.name }}">{{ tag.name }}</a> &nbsp
+{% endfor %}
+</p>
+<p> Source: &nbsp {{ recipe.source }}</p>

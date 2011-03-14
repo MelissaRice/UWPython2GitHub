@@ -1,0 +1,35 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+    <link type="text/css" rel="stylesheet" href="/css/base.css" />
+    <title>Link Editor</title>
+  </head>
+  <body>
+    <div class="headerMenu">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/links/">Links</a></li>
+        <li><a href="/tags/">Tags</a></li>
+      </ul>
+      <div id="login">{{ currentLogin }} ...<a href="{{ loginURL }}">{{ loginAction }}</a></div>
+    </div> 
+
+    <h1>Edit Link</h1>
+    <form action="/updateLink/{{ link.key.id }}" method="post">
+      <p>URL: <div><textarea name="url" rows="1" cols="80">{{ link.url }}</textarea></div></p>
+      <p>Short description: <div><textarea name="short" rows="1" cols="80">{{ link.shortDescription }}</textarea></div></p>
+      <p>Long description: <div><textarea name="long" rows="5" cols="80">{{ link.longDescription }}</textarea></div></p>
+      Tags: 
+      <ul class='arrow'>
+        {% for tagname in checkedTagNames %}
+          <li><input type='checkbox' name='{{ tagname }}' checked='yes' >{{ tagname }}</li>
+        {% endfor %}
+        {% for tagname in uncheckedTagNames %}
+          <li><input type='checkbox' name='{{ tagname }}'  >{{ tagname }}</li>
+        {% endfor %}
+      </ul>
+      <div><input type="submit" value="Update link"></div>
+    </form>
+  </body>
+</html>

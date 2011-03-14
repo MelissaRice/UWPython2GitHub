@@ -1,0 +1,32 @@
+[ {% for tag in tags %}
+    { "pk": {{ tag.key.id }},
+        "model": "relink.Tag",
+        "fields": {"tagName":"{{ tag.tagName }}",
+            "tagDescription":"{{ tag.tagName }}"
+            }
+    }{% if not forloop.last %}, {% endif %}
+{% endfor %} 
+{% for link in links %}
+{% if forloop.first %}, {% endif %}
+    { "pk": {{ link.key.id }},
+        "model": "relink.Link",
+        "fields": {"poster":"{{ link.poster }}",
+            "url":"{{ link.url }}",
+            "postDate":"{{ link.postDate|date:"Y-m-d-H:i:s" }}",
+            "shortDescription":"{{ link.shortDescription }}",
+            "longDescription":"{{ link.longDescription }}"
+            }
+    }{% if not forloop.last %} , {% endif %}
+{% endfor %} 
+{% for linkTag in linkTags %}
+{% if forloop.first %}, {% endif %}
+    { "pk": {{ linkTag.key.id }},
+        "model": "relink.LinkTag",
+        "fields": {"tagName":"{{ linkTag.tag.tagName }}",
+            "url":"{{ linkTag.link.url }}",
+            "poster":"{{ linkTag.link.poster }}"
+            }
+    }{% if not forloop.last %} , {% endif %}
+{% endfor %} 
+]
+

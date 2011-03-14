@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+    <link type="text/css" rel="stylesheet" href="/css/base.css" />
+    <title>Link Manager</title>
+  </head>
+  <body>
+    <div class="headerMenu">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li>Links</li>
+        <li><a href="/tags/">Tags</a></li>
+      </ul>
+      <div id="login">{{ currentLogin }} ...<a href="{{ loginURL }}">{{ loginAction }}</a></div>
+    </div> 
+    <div class="linkMenu">
+      <ul>
+        <li><a href="/links-alpha/">Alphabetical</a></li>
+        <li><a href="/links-chronos/">Chronological</a></li>
+        <li><a href="#NewLink">Add new link</a></li>
+      </ul>
+    </div><br/> 
+    <h1>{{ mainHead }}</h1>
+    <ul class="arrow">
+    {% for link in links %}
+      <li>
+      <a href="{{ link.url }}"> {{ link.shortDescription }}</a> &nbsp &nbsp    
+      <a href="/link/{{ link.key.id }}"> (edit)</a>    
+	  {% if link.longDescription %}
+	    <blockquote>{{ link.longDescription }}</blockquote>
+	  {% endif %}
+    </li>
+    {% endfor %}
+    </ul>
+
+    <br/><hr/><br/>
+    <h1><a name="NewLink">Add a New Link</a></h1>
+    <form action="/addLink" method="post">
+      <p>URL: <div><textarea name="url" rows="1" cols="80"></textarea></div></p>
+      <p>Short description: <div><textarea name="short" rows="1" cols="80"></textarea></div></p>
+      <p>Long description: <div><textarea name="long" rows="5" cols="80"></textarea></div></p>
+      Tags: 
+      <ul class='arrow'>
+        {% for tag in tags %}
+          <li><input type='checkbox' name='{{ tag.tagName }}' >{{ tag.tagName }}</li>
+        {% endfor %}
+      </ul>
+      <div><input type="submit" value="Add link"></div>
+    </form>
+
+    
+
+  </body>
+</html>

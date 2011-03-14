@@ -1,0 +1,17 @@
+application: relinkmlr
+version: 0-02
+runtime: python
+api_version: 1
+
+handlers:
+
+- url: /css
+  static_dir: static/css
+
+- url: /admin/remote
+  script: $PYTHON_LIB/google/appengine/ext/remote_api/handler.py
+  login: admin
+  
+- url: /.*
+  script: relink.py
+

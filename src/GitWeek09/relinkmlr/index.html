@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+    <link type="text/css" rel="stylesheet" href="/css/base.css" />
+    <title>Link Librarian</title>
+  </head>
+  <body>
+    <div class="headerMenu">
+      <ul>
+        <li>Home</li>
+        <li><a href="/links/">Links</a></li>
+        <li><a href="/tags/">Tags</a></li>
+      </ul>
+      <div id="login">{{ currentLogin }} ...<a href="{{ loginURL }}">{{ loginAction }}</a></div>
+    </div> 
+    <p/>
+    <h1>Tag, Annotate, and Share Your Links</h1>
+    <div class="warning"> Warning: This site is experimental and may disappear at any time... </div> 
+    <h2>Some Recent Links</h2>
+    <ul class="arrow">
+    {% for link in links %}
+      <li>
+      <a href="{{ link.url }}"> {{ link.shortDescription }}</a>    
+	  {% if link.longDescription %}
+	    <blockquote>{{ link.longDescription }}</blockquote>
+	  {% endif %}
+    </li>
+    {% endfor %}
+    </ul>    
+  </body>
+</html>

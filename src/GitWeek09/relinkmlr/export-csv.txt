@@ -1,0 +1,12 @@
+Tags {{ tab }} tag.key.id {{ tab }} tag.tagName {{ tab }} tag.tagDescription
+{% for tag in tags %} {{ tab }} {{ tag.key.id }} {{ tab }} {{ tag.tagName }} {{ tab }} {{ tag.tagDescription }} 
+{% endfor %}
+
+Links {{ tab }} link.key.id {{ tab }} link.poster {{ tab }} link.url {{ tab }} link.postDate {{ tab }} link.shortDescription {{ tab }} link.longDescription
+{% for link in links %} {{ tab }} {{ link.key.id }} {{ tab }} {{ link.poster }} {{ tab }} {{ link.url }} {{ tab }} {{ link.postDate }} {{ tab }} {{ link.shortDescription }} {{ tab }} {{ link.longDescription }}  
+{% endfor %}
+
+LinkTags {{ tab }} linkTag.key.id {{ tab }} linkTag.tag.key.id {{ tab }} linkTag.link.key.id
+{% for linkTag in taggings %} {{ tab }} {{ linkTag.key.id }} {{ tab }} {{ linkTag.tag.key.id }} {{ tab }} {{ linkTag.link.key.id }} 
+{% endfor %}
+

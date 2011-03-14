@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+  <head>
+    <link type="text/css" rel="stylesheet" href="/css/base.css" />
+    <title>Tags</title>
+  </head>
+  <body>
+    <div class="headerMenu">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/links/">Links</a></li>
+        <li><a href="/tags/">Tags</a></li>
+      </ul>
+      <div id="login">{{ currentLogin }} ...<a href="{{ loginURL }}">{{ loginAction }}</a></div>
+    </div> 
+    <p/>
+    <h1>Links Tagged with {{ tagName }}</h1>
+    <ul class="arrow">
+    {% for link in links %}
+      <li>
+      <a href="{{ link.url }}"> {{ link.shortDescription }}</a>    
+	  {% if link.longDescription %}
+	    <blockquote>{{ link.longDescription }}</blockquote>
+	  {% endif %}
+    </li>
+    {% endfor %}
+    </ul>
+    <h1>Add a New Tag</h1>
+
+    <form action="/addTag" method="post">
+      <p>Tag Name: <div><textarea name="name" rows="1" cols="30"></textarea></div></p>
+      <p>Description: <div><textarea name="description" rows="5" cols="80"></textarea></div></p>
+      <div><input type="submit" value="Add tag"></div>
+    </form>
+
+    
+
+  </body>
+</html>

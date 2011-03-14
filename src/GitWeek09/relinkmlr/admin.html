@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+  <head>
+    <link type="text/css" rel="stylesheet" href="/css/base.css" />
+    <title>Admint</title>
+  </head>
+  <body>
+    <div class="headerMenu">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li>Admin</li>
+        <li><a href="/admin/tasks">Tasks</a></li>
+      </ul>
+      <div id="login">{{ currentLogin }} ...<a href="{{ loginURL }}">{{ loginAction }}</a></div>
+    </div> 
+    <p/>
+    <h1>Export Data</h1>
+      <p>You can export all of the data in the datastore as a csv or json file which you may download to your local computer.</p>
+      <form action="/admin/export/json" method="post">
+      <div><input type="submit" value="Export Data as JSON"></div></form>
+
+      <form action="/admin/export/csv" method="post">
+      <div><input type="submit" value="Export Data as CSV"></div></form>
+      
+    <h1>Import Data</h1>
+      <p>Using the same csv or json formats as for export, you may upload data to the datastore from your local computer.</p>
+      <form action="/admin/import/json" method="post" ENCTYPE="multipart/form-data">
+      <p>Upload a properly-formatted json file...</p> 
+      <div><input type="file" name="fileToImport" size="80"></div>
+      <div><input type="submit" value="Upload JSON data"></div></form>
+
+      <form action="/admin/import/csv" method="post" ENCTYPE="multipart/form-data">
+      <p>Upload a properly-formatted csv file...</p> 
+      <div><input type="file" name="fileToImport" size="80"></div>
+      <div><input type="submit" value="Upload CSV data"></div></form>
+  </body>
+</html>

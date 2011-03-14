@@ -1,0 +1,214 @@
+body {
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 80%;
+  background-color: rgb(240,200,240);
+  margin-left:20px;
+  line-height:120%;
+}
+
+/* level 1 heading styling */
+h1 {
+  font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
+  font-size: 1.5em;
+  color: rgb(100,0,150);
+  background-color: rgb(240,200,240);
+  text-align: center;
+  font-style:bold;
+}
+
+/* level 2 heading styling */
+h2 {
+  font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
+  font-size: 1.4em;
+  color: rgb(100,0,150);
+  background-color: rgb(240,200,240);
+  font-style:italic;
+}
+
+/* level 3 heading styling */
+h3 {
+  font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
+  font-size: 1.3em;
+  color: rgb(100,0,150);
+  background-color: rgb(240,200,240);
+  font-style:normal;
+}
+
+/* level 4 heading styling */
+h4 {
+  font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
+  font-size: 1.2em;
+  color: rgb(100,0,150);
+  background-color: rgb(240,200,240);
+  font-style:normal;
+}
+
+
+/* level 5 heading styling */
+h5 {
+  font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
+  font-size: 1.1em;
+  color: rgb(100,0,150);
+  background-color: rgb(240,200,240);
+  font-style:normal;
+}
+
+
+/* level 6 heading styling */
+h6 {
+  font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
+  font-size: 1.0em;
+  color: rgb(100,0,150);
+  background-color: rgb(240,200,240);
+  font-style:normal;
+}
+
+/* paragraph styling */
+p {
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 0.8em;
+  color: rgb(100,0,150);
+  background-color: rgb(240,200,240);
+  text-align: justify;
+  
+}
+
+
+/* header bar id styling */
+#headerBar {
+  font-family: ;
+  color: rgb(100,0,150);
+  background-color: rgb(240,200,240);
+}
+
+.classExample {
+  font-family: ;
+  color: rgb(100,0,150);
+  background-color: rgb(240,200,240);
+}	
+
+div.warning {
+  width:70%;
+  text-align: center;
+  padding:10px;
+  border:5px double red;  
+  outline-style: ridge;
+  margin:auto;
+  font-family: "Lucida Console", Tahoma, Geneva, san-serif;
+  font-size: 1.0em;
+  font-weight: 100;
+  color: rgb(0,0,0);
+  background-color: rgb(255,255,0);
+}
+
+div.headerMenu {
+  font-family:  "Palatino Linotype", Tahoma, Geneva, san-serif;
+  width:100%;
+  background-color: rgb(200,200,255); 
+  height:1.5em;
+  margin:0;
+  padding:0.5em 0em;
+}
+div.headerMenu ul {
+  float:left;
+  width:60%;
+  padding:0;
+  margin:0;
+  font-variant: small-caps;
+  list-style-type:none;
+  
+}
+div.headerMenu li {
+	display:inline;
+}
+div.headerMenu a {
+  text-decoration:none;
+  color: rgb(100,0,100);
+  padding:0.2em 0.5em;
+}
+
+div.headerMenu a:hover {
+  background-color: rgb(255,200,200);}
+}
+
+div.linkMenu {
+  font-family:  "Palatino Linotype", Tahoma, Geneva, san-serif;
+  width:100%;
+  background-color: rgb(255,255,150); 
+  height:1.5em;
+  margin:0;
+  padding:0.5em 0em;
+}
+div.linkMenu ul {
+  float:right;
+  width:20%;
+  padding:0;
+  margin:0;
+  font-variant: small-caps;
+  list-style-type:none;
+  
+}
+div.linkMenu a {
+  text-decoration:none;
+  color: rgb(0,0,100);
+  padding:0.2em 0.5em;
+}
+
+div.linkMenu a:hover {
+  background-color: rgb(255,200,255);}
+}
+
+
+#login {
+  float:right;
+  text-align:right;
+  width: 40%;
+}
+	
+
+
+/* Link Styling */
+a:link { /* unvisited link */
+  color: rgb(0,0,250);
+} 
+a:visited { /* visited link */
+  color: rgb(100,100,150);
+} 
+a:hover { /* while mouse is hovering over link */
+  color: rgb(250,0,50);
+  background-color: rgb(240,240,0);
+} 
+a:active { /* selected link */
+  color: rgb(150,100,0);
+} 
+
+
+/* unordered list styling */
+ul.circle { list-style-type: circle; }
+ul.disc { list-style-type: disc; }
+ul.square { list-style-type: square; }
+
+/* test-debug - former arrow list code */
+ul.fix { /* small hand-drawn arrow for mark */
+  list-style-type: none;
+  padding: 0px;
+  margin: 0px;
+}
+li {
+  background-image: url(arrowSmallPurple.png);
+  background-repeat: no-repeat;
+  background-position: 0px 5px;
+  padding-left: 14px;
+}
+
+/* test-debug */
+ul.arrow { /* disable for now till static service works */
+  list-style-type: none;
+  padding: 0px;
+  margin: 0px;
+}
+li {
+  padding-left: 14px;
+}
+
+/* ordered list styling */
